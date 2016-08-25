@@ -31,16 +31,15 @@ html(lang='en')
     link(href="/multi-select/css/multi-select.css" rel="stylesheet" type="text/css")
     script(src="/multi-select/js/jquery.multi-select.js")
 
+    //graph
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="javascript/Chart.min.js"></script>
+    <script type="text/javascript" src="javascript/Chart.StackedBar.js"></script>
+
     style.
-      #textarea {border-radius: 10%}
-      #div_textarea {border-radius: 10%}
-      #chart {width: 100%;height: 100%;margin:30px auto 0;display: block;}
-      #chart #bars {display: inline-block;width: 100%;height: 100%;padding: 0;margin: 0 ;}
-      #chart #bars li {display: table-cell;width: 100px;height: 300px;margin: 0;text-align: center;position: relative;}
-      #chart #bars li .bar {display: block;width: 90px;margin-left: 415%;background: #49E;position: absolute;bottom: 0;}
-      #chart #bars li .bar:hover {background: #5AE;cursor: pointer;}
-      #chart #bars li .bar:hover:before {color: black;content: attr(data-percentage) '%';position: relative;bottom: 20px;}
-      #chart #bars li span {color: #eee;width: 100%;position: absolute;bottom: 0;left: 0;text-align: center;}
+      #textarea {border-radius: 5%}
+
 
   body
     include ./header.jade
@@ -48,62 +47,47 @@ html(lang='en')
     #main(style='margin:0 auto; width: 80%')
       h2(id='h2') 수행평가 가정 통지표
 
-      p(style='float:right')
+      h4(style='float:right') 이름
         =student_name
       p
-
-      div(id='div_textarea')
-        if ifExist
-          textarea#textarea(style='width:100%; height:180px;border:double 4px')
-        else
-          textarea#textarea(style='width:100%; height:180px;border:double 4px')
-            |      귀하의 수행평가는 아직 평가되지 않았습니다.
-
       p
-      h3 ※ 과목별 성적
-      p(style='float:right') 파랑 : 학급평균 - 빨강: 본인평균
+      p
+      p
+
       if ifExist
+
+        div(id='div_textarea')
+          .form-group
+          textarea#textarea.form-control(rows='5')
+
         -var allSum = 0;
         -var perSum = 0;
         table(style='width:100%;border:3px black solid;')#subject_table
           each valAll, indexAll in standard_all
             if(valAll.score == 'EXCELLENT')
-              -allSum = allSum + 4;
+              -allSum = allSum + 10;
             if(valAll.score == 'GREAT')
-              -allSum = allSum + 3;
+              -allSum = allSum + 9;
             if(valAll.score == 'GOOD')
-              -allSum = allSum + 2;
+              -allSum = allSum + 8;
             if(valAll.score == 'BAD')
-              -allSum = allSum + 1;
+              -allSum = allSum + 6;
 
           each per1, indexPer1 in standard_per_stu
             if(per1.score == 'EXCELLENT')
-              -perSum = perSum + 4;
+              -perSum = perSum + 10;
             if(per1.score == 'GREAT')
-              -perSum = perSum + 3;
+              -perSum = perSum + 9;
             if(per1.score == 'GOOD')
-              -perSum = perSum + 2;
+              -perSum = perSum + 8;
             if(per1.score == 'BAD')
-              -perSum = perSum + 1;
+              -perSum = perSum + 6;
 
+          tr(style='height:210px;border-style:hidden;')
+            td(style='text-align:center')
+              canvas#canvas(height='250', width='250')
 
-
-          tr(style='height:210px;border:3px black solid; background-color:#F3FFFF')
-            td(style='border:3px black solid')
-              #chart
-                ul#bars
-                  li
-                    .bar(data-percentage=(allSum/(standard_all.length*4)*100).toFixed(1))
-                      span 평균
-                  li
-                    .bar(data-percentage=(perSum/(standard_per_stu.length*4)*100).toFixed(1) style='background-color:red')
-                      span 학생
-
-
-
-
-
-          tr(style='border:1px black solid')
+          tr(style='border-style:hidden')
             th(style='text-align:center;') [영어]
 
 
@@ -111,58 +95,117 @@ html(lang='en')
 
         table(style='width:100%;border:3px black solid')#contents_table
           tr(style='border:3px black solid')
-            th(style='text-align:center;background-color:#FFF0F5' colspan='4') 종합결과
+            th(style='text-align:center;' colspan='4') 종합결과
           tr(style='border:1px black solid')
             th(style='text-align:center;border:1px black solid; background-color:#FFEBF0') 매우우수
             th(style='text-align:center;border:1px black solid; background-color:#00FF99') 우수
             th(style='text-align:center;border:1px black solid;background-color:#99CCFF') 보통
             th(style='text-align:center;border:1px black solid; background-color:#FFFFCC') 미흡
           tr(style='border:1px black solid')
-            th(style='text-align:center;border:1px black solid; background-color:#FFEBF0')
-              if ((perSum/(standard_per_stu.length*4)*100).toFixed(1) >= 90)
+            th(style='text-align:center;border:1px black solid;')
+              if (((perSum/(standard_per_stu.length*10))*100).toFixed(1) >= 90)
                 span O
-            th(style='text-align:center;border:1px black solid; background-color:#00FF99')
-              if ((perSum/(standard_per_stu.length*4)*100).toFixed(1) <= 89 && (perSum/(standard_per_stu.length*4)*100).toFixed(1) >= 80)
+            th(style='text-align:center;border:1px black solid;')
+              if (((perSum/(standard_per_stu.length*10))*100).toFixed(1) <= 89 && ((perSum/(standard_per_stu.length*10))*100).toFixed(1) >= 80)
                 span O
-            th(style='text-align:center;border:1px black solid; background-color:#99CCFF')
-              if ((perSum/(standard_per_stu.length*4)*100).toFixed(1) <= 79 && (perSum/(standard_per_stu.length*4)*100).toFixed(1) >= 70)
+            th(style='text-align:center;border:1px black solid;')
+              if (((perSum/(standard_per_stu.length*10))*100).toFixed(1) <= 79 && ((perSum/(standard_per_stu.length*10))*100).toFixed(1) >= 70)
                 span O
-            th(style='text-align:center;border:1px black solid; background-color:#FFFFCC')
-              if ((perSum/(standard_per_stu.length*4)*100).toFixed(1) <= 69)
+            th(style='text-align:center;border:1px black solid;')
+              if (((perSum/(standard_per_stu.length*10))*100).toFixed(1) <= 69)
                 span O
           tr(style='border:1px black solid')
-            td(style='height:150px;border:1px black solid; background-color:#FFEBF0')
-              textarea(style='width:100%; height:100%;border:none; background-color:#FFEBF0')
+            td(style='height:150px;border:1px black solid;')
+              textarea(style='width:100%; height:100%;border:none;')
                 | 수행평가의 각 영역에 대한 성적이 매우 우수하며 인지,정의 영역의 능력과 성취의욕이 매우 높음.
-            td(style='border:1px black solid; background-color:#00FF99')
-              textarea(style='width:100%; height:100%;border:none; background-color:#00FF99')
+            td(style='border:1px black solid;')
+              textarea(style='width:100%; height:100%;border:none;')
                 | 수행평가의 각 영역에 대한 성적이 우수하며, 인지 및 정의적 능력이 바르게 정착됨.
-            td(style='border:1px black solid; background-color:#99CCFF')
-              textarea(style='width:100%; height:100%;border:none; background-color:#99CCFF')
+            td(style='border:1px black solid;')
+              textarea(style='width:100%; height:100%;border:none;')
                 | 수행평가의 각 영역에 대한 성적이 양호하나 꾸준히 노력하고 문제의 핵심파악하는 능력이 요구됨.
-            td(style='border:1px black solid; background-color:#FFFFCC')
-              textarea(style='width:100%; height:100%;border:none; background-color:#FFFFCC')
+            td(style='border:1px black solid;')
+              textarea(style='width:100%; height:100%;border:none;')
                 | 기초학력 부족으로 수행평가의 각 영역에 대한 성적이 부진하며 기초학력향상과 지속적인 노력이 필요함.
 
-      p
-      h3 ※ 의견란
-      p
-        table(style='width:100%')#opinion_table
-          tr(style='background-color:#FFFF99;border:1px black solid')
-            th(style='text-align:center;border:3px black solid') 담임
-            th(style='text-align:center;border:3px black solid') 학부모
-          tr(style='background-color:#FFFF99;border:3px black solid')
-            td(style='height:100px;border:3px black solid')
-              textarea(style='width:100%; height:100%;border:none; background-color:#FFFF99')
-            td(style='border:3px black solid')
-              textarea(style='width:100%; height:100%;border:none; background-color:#FFFF99')
+        p
+        h3 ※ 의견란
+        p
+          table(style='width:100%')#opinion_table
+            tr(style='background-color:#FFFF99;border:1px black solid')
+              th(style='text-align:center;border:3px black solid') 담임
+              th(style='text-align:center;border:3px black solid') 학부모
+            tr(style='border:3px black solid')
+              td(style='height:100px;border:3px black solid')
+                textarea(style='width:100%; height:100%;border:none;')
+              td(style='border:3px black solid')
+                textarea(style='width:100%; height:100%;border:none;')
+
+      else
+        .form-group
+        textarea#textarea.form-control(rows='5')
+          |      귀하의 수행평가는 아직 평가되지 않았습니다.
 
     script.
-      $(function(){
-      $("#bars li .bar").each(function(key, bar){
-      var percentage = $(this).data('percentage');
-      $(this).animate({
-      'height':percentage+'%'
-      }, 1000);
-      })
-      })
+      //그래프 그리기
+      //var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+
+      var all = function(){return ((parseInt(#{allSum})/(parseInt(#{standard_all.length})*10))*100).toFixed(1)};
+      var per_stu = function(){return ((parseInt(#{perSum})/(parseInt(#{standard_per_stu.length})*10))*100).toFixed(1)};
+      alert(all()+' -  ' + per_stu())
+      var barChart = null;
+      var barChartData = {
+      labels : ['평균(Red)/학생(Blue)'],
+      datasets : [
+      {
+      fillColor : "rgba(255,051,051,0.5)",
+      strokeColor : "rgba(255,051,051,0.8)",
+      highlightFill: "rgba(255,051,051,0.75)",
+      highlightStroke: "rgba(255,051,051,1)",
+      data : [all()]
+      },
+      {
+      fillColor : "rgba(000,153,255,0.5)",
+      strokeColor : "rgba(000,153,255,0.8)",
+      highlightFill : "rgba(000,153,255,0.75)",
+      highlightStroke : "rgba(000,153,255,1)",
+      data : [per_stu()]
+      }
+      ]
+      };
+      $(function() {
+      var ctx = document.getElementById("canvas").getContext("2d");
+      barChart = new Chart(ctx).Bar(barChartData, {
+      //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+      scaleOverride : true,
+      scaleSteps : 10,
+      scaleStepWidth : 10,
+      scaleStartValue : 0,
+      //Boolean - Whether grid lines are shown across the chart
+      scaleShowGridLines : true,
+      //String - Colour of the grid lines
+      scaleGridLineColor : "rgba(0,0,0,0.05)",
+      //Number - Width of the grid lines
+      scaleGridLineWidth : 1,
+      //Boolean - If there is a stroke on each bar
+      barShowStroke : true,
+      //Number - Pixel width of the bar stroke
+      barStrokeWidth : 2,
+      //Number - Spacing between each of the X value sets
+      barValueSpacing : 5,
+      //Number - Spacing between data sets within X values
+      barDatasetSpacing : 5,
+      onAnimationProgress: function() {
+      console.log("onAnimationProgress");
+      },
+      onAnimationComplete: function() {
+      console.log("onAnimationComplete");
+      }
+      });
+      });
+      $("input#btnAdd").on("click", function() {
+      barChart.addData(
+      [randomScalingFactor(),randomScalingFactor(),randomScalingFactor()],
+      months[(barChart.datasets[0].bars.length)%12]
+      );
+      });

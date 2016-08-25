@@ -54,7 +54,7 @@ html
                 .panel-heading
                   h4.panel-title
                     a(data-toggle='collapse', data-parent='#accordion', href='#collapse'+(index+1))
-                      =val.id +'.'+val.subject_name
+                      =index+1 +'.'+val.subject_name
                 div(id='collapse'+(index+1) class='panel-collapse collapse')
                   .panel-body(id='panel-body'+val.id)
                     =(index+1)+'.' + val.subject_name
@@ -94,7 +94,7 @@ html
                 .panel-heading
                   h4.panel-title
                     a(data-toggle='collapse', href='#collapse'+(val.name))
-                      =val.user_group_id+'. '+val.name
+                      =index+1+'. '+val.name
                 div(id='collapse'+(val.name) class='panel-collapse collapse')
                   .panel-body
                     div(style='float:right')
@@ -107,16 +107,16 @@ html
                     //수행평가 고르기
                     div(style='float:right').col-sm-3
                       select#class.form-control(name='performances')
-                        option 수행평가를 선택해주세요
+                        option 위의 수행평가중 하나를 선택해주세요
                         each variable, count in ShowPerforms
                           option(value=variable.id)
-                            =variable.id
+                            =count+1 +'. '+variable.subject_name
 
 
                   each student, studentIndex in Students
                     if(val.name == student[0].personal_id.substring(0,5))
                       .panel-footer(id='panel-footer'+studentIndex)
-                        =student[0].user_id + '. ' + student[0].name
+                        =student[0].name
                           div(style='float:right')
                             if (array.indexOf(student[0].user_id) != -1)
                               button.btn.btn-success.btn-xs(type='button' onclick='evaluationResult(this)' id = student[0].user_id
