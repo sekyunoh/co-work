@@ -21,7 +21,8 @@ app.use(session({
     port:3306,
     user:'root',
     password:'Dhtp12rbs.',
-    database:'sat_performance'
+    //database:'sat_performance'
+    database: 'performance'
   })
 }));
 app.use(passport.initialize());
@@ -100,7 +101,7 @@ var conn = mysql.createConnection({
   port     : '3306',
   user     : 'root',
   password : 'Dhtp12rbs.',
-  database : 'sat_performance',
+  database: 'performance',
   dateStrings: true
 });
 
